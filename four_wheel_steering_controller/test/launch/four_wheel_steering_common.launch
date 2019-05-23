@@ -4,7 +4,11 @@
 
   <!-- Load four_wheel_steering model -->
   <param name="robot_description"
-         command="$(find xacro)/xacro --inorder '$(find four_wheel_steering_controller)/test/urdf/four_wheel_steering.urdf.xacro'" />
+         command="rosrun xacro xacro '$(find four_wheel_steering_controller)/test/urdf/four_wheel_steering.urdf.xacro'" />
+
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+               <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
 
   <!-- Start four_wheel_steering -->
   <node name="four_wheel_steering"
@@ -19,16 +23,27 @@
         pkg="controller_manager" type="spawner" output="screen"
         args="four_wheel_steering_controller --shutdown-timeout 5" />
 
+    <node pkg="joy" type="joy_node" name="joy_node">
+      <param name="dev" value="/dev/input/js0" />
+    </node>
+
+    <node pkg="teleop_twist_joy" type="teleop_node" name="teleop_twist_joy">
+      <remap from="cmd_vel" to="/four_wheel_steering_controller/cmd_vel"/>
+      <param name="axis_linear" value="1"/>
+      <param name="axis_angular" value="3"/>
+      <param name="enable_button" value="5"/>
+    </node>
+
   <!-- rqt_plot monitoring -->
 
-  <!--<node name="four_wheel_steering_cmd_monitor"
+  <!--node name="four_wheel_steering_cmd_monitor"
         pkg="rqt_plot"
         type="rqt_plot"
         args="/four_wheel_steering_controller/cmd_vel/linear" />
   <node name="four_wheel_steering_4ws_cmd_monitor"
         pkg="rqt_plot"
         type="rqt_plot"
-        args="/four_wheel_steering_controller/cmd_four_wheel_steering" />-->
+        args="/four_wheel_steering_controller/cmd_four_wheel_steering" /-->
   <!--<node name="four_wheel_steering_pos_monitor"
         pkg="rqt_plot"
         type="rqt_plot"
@@ -39,6 +54,6 @@
         type="rqt_plot"
         args="/four_wheel_steering_controller/odom/twist/twist/linear/x" />-->
 
-  <!--<node name="rviz" pkg="rviz" type="rviz" args="-d $(find four_wheel_steering_controller)/test/config/view_odom.rviz"/>-->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find four_wheel_steering_controller)/test/config/view_odom.rviz"/>
 
 </launch>

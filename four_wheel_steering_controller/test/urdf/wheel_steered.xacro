@@ -5,7 +5,7 @@
 
   <xacro:property name="steering_link_y" value="0.05" />
   <xacro:property name="steering_link_xz" value="0.1" />
-  <xacro:property name="steering_link_mass" value="5.0" />
+  <xacro:property name="steering_link_mass" value="500.0" />
 
   <xacro:include filename="$(find four_wheel_steering_controller)/test/urdf/wheel.xacro" />
 
@@ -44,11 +44,11 @@
     <transmission name="${wheel_prefix}_steering_trans" type="SimpleTransmission">
       <type>transmission_interface/SimpleTransmission</type>
       <actuator name="${wheel_prefix}_steering_motor">
-        <hardwareInterface>PositionJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
       <joint name="${wheel_prefix}_steering_joint">
-        <hardwareInterface>PositionJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
       </joint>
     </transmission>
 
@@ -58,4 +58,3 @@
   </xacro:macro>
 
 </robot>
-
